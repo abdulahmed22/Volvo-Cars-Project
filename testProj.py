@@ -1,14 +1,15 @@
+
 import pandas as pd
 import numpy as np 
 import  matplotlib.pyplot as plt
 
-
+#############
 def process_data_and_plot(data, title_suffix=''):
     # Extract 'Lev.YearMonth' as strings
     months = data['Lev.YearMonth'].astype(str)
 
     # Get unique months in the dataset
-    unique_months = months.unique()
+    unique_months = sorted(months.unique())  ##sendning order for both lager and not lager
 
     # Initialize lists to store data for each month
     recycled_sum_per_month = []
@@ -21,6 +22,16 @@ def process_data_and_plot(data, title_suffix=''):
 
         # Extract 'RodKodbeskr' for the current month
         data_month = data.loc[indexes_of_month, 'RodKodbeskr']
+
+
+        ## For testing the result:
+        data_amin=data.loc[indexes_of_month, 'Kvantitet kg']
+        print(title_suffix)
+        print(month)
+        print(len(data_amin))
+        print("data month :")
+        print (data_amin)
+        #################################
 
         # Get indices where 'RodKodbeskr' contains 'Recycle' for the current month
         indexes_of_Recycled_month = data_month[data_month.str.contains(r'Recycle', case=False)].index.tolist()
@@ -35,6 +46,23 @@ def process_data_and_plot(data, title_suffix=''):
         # Sum weights for recycled and not recycled items for the current month
         recycled_sum_per_month.append(sum(weight_recycled_month))
         not_recycled_sum_per_month.append(sum(weight_Not_recycled_month))
+
+
+       # Print total_weight_per_month, total_recycled, and total_not_recycled for each month
+    for i, month in enumerate(unique_months):
+        if i < len(recycled_sum_per_month) and i < len(not_recycled_sum_per_month):
+            total_weight = recycled_sum_per_month[i] + not_recycled_sum_per_month[i]
+            total_recycled = recycled_sum_per_month[i]
+            total_not_recycled = not_recycled_sum_per_month[i]
+
+            # Print whether it's for "Lager" or "Rest"
+            location_type = 'Lager' if 'Lager' in title_suffix else 'Rest'
+            print(f'{location_type} - Month: {month}, Total Weight: {total_weight}, Total Recycled: {total_recycled}, Total Not Recycled: {total_not_recycled}')
+        else:
+            print(f'Error: Index {i} out of range')
+
+        
+
 
     # Plotting for Each Month (Total Weight)
     total_weight_per_month = [total_recycled + total_not_recycled for total_recycled, total_not_recycled in zip(recycled_sum_per_month, not_recycled_sum_per_month)]
@@ -71,7 +99,7 @@ def process_data_and_plot(data, title_suffix=''):
 def main():
 
     df = pd.read_excel("Volvo Cars Waste data-Stena Recyling report_2023.xlsx")
-    df_des = pd.read_excel("Volvo Cars Waste data-Support data.xlsx")
+    #df_des = pd.read_excel("Volvo Cars Waste data-Support data.xlsx")
 
     #filtiring the Rod code
     RodKod = df['RodKodbeskr']
@@ -89,7 +117,7 @@ def main():
     city = df_filtered2['Hämtställe Ort']
     indexes3 = city[city == 'Mölndal'].index.tolist()
     df_filtered3 = df_filtered2.drop(index = indexes3)
-   
+
 
 
     #RA
@@ -171,55 +199,55 @@ def main():
 
 
 
-    places= data_for_the_lager['RodKodbeskr']
-    indexes_of_Recycled=places[places.str.contains(r'Recycled')].index.tolist()
-    print(indexes_of_Recycled)
-    print(len(indexes_of_Recycled))
+   # places= data_for_the_lager['RodKodbeskr']
+    #indexes_of_Recycled=places[places.str.contains(r'Recycled')].index.tolist()
+   # print(indexes_of_Recycled)
+    #print(len(indexes_of_Recycled))
 
 
 
-    data_recycled=data_for_the_lager.loc[indexes_of_Recycled]
-    data_not_recycled=data_for_the_lager.drop(index=indexes_of_Recycled)
-    print(data_recycled)
-    print(data_not_recycled)
+    #data_recycled=data_for_the_lager.loc[indexes_of_Recycled]
+    #data_not_recycled=data_for_the_lager.drop(index=indexes_of_Recycled)
+    #print(data_recycled)
+    #print(data_not_recycled)
 
-    weight_rec=data_recycled['Kvantitet kg']
-    x=sum(weight_rec)
-    print(x)
+   # weight_rec=data_recycled['Kvantitet kg']
+   # x=sum(weight_rec)
+   # print(x)
 
-    weight_not_rec=data_not_recycled['Kvantitet kg']
-    y=sum(weight_not_rec)
-    print(y)
+   # weight_not_rec=data_not_recycled['Kvantitet kg']
+    #y=sum(weight_not_rec)
+    #print(y)
 
-    tot=x+y
-    print(tot)
-    ##
+    #tot=x+y
+    #print(tot)
+    ###
 
 
     
-    places2=data_for_the_rest['RodKodbeskr']
-    indexes_of_Recycled_not_lager=places2[places2.str.contains(r'Recycled')].index.tolist()
+    #places2=data_for_the_rest['RodKodbeskr']
+    #indexes_of_Recycled_not_lager=places2[places2.str.contains(r'Recycled')].index.tolist()
     #print(indexes_of_Recycled_not_lager)
-    print(len(indexes_of_Recycled_not_lager))
-    data_recycled_not_lager=data_for_the_rest.loc[indexes_of_Recycled_not_lager]
+    #print(len(indexes_of_Recycled_not_lager))
+    #data_recycled_not_lager=data_for_the_rest.loc[indexes_of_Recycled_not_lager]
     
 
    
-    data_not_recycled_not_lager=data_for_the_rest.drop(index=indexes_of_Recycled_not_lager)
+    #data_not_recycled_not_lager=data_for_the_rest.drop(index=indexes_of_Recycled_not_lager)
     #print(data_recycled_not_lager)
     #print(data_not_recycled_not_lager)
 
-    weight_rec_not_lager=data_recycled_not_lager['Kvantitet kg']
-    x1=sum(weight_rec_not_lager)
+    #weight_rec_not_lager=data_recycled_not_lager['Kvantitet kg']
+    #x1=sum(weight_rec_not_lager)
     #print(x1)
     
 
-    weight_not_rec_not_kager=data_not_recycled_not_lager['Kvantitet kg']
-    y1=sum(weight_not_rec_not_kager)
+   # weight_not_rec_not_kager=data_not_recycled_not_lager['Kvantitet kg']
+   # y1=sum(weight_not_rec_not_kager)
     #print(y1)
-    tot1=x1+y1
+    #tot1=x1+y1
 
-    print(tot1)
+    #print(tot1)
    
 
 
