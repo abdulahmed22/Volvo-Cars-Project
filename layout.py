@@ -28,7 +28,7 @@ if uploaded_file is None:
     st.info("Upload a file through config")
     st.stop()
 
-@st.cache_data
+@st.cache
 def load_data(path: str):
     df = pd.read_excel(path)
     return df
