@@ -25,7 +25,7 @@ with st.sidebar:
     uploaded_file = st.file_uploader("Choose a file")
 
 if uploaded_file is None:
-    st.info(" Upload a file through config", icon="ℹ️")
+    st.info(" Upload a file through config")
     st.stop()
 
 
