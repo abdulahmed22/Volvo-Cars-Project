@@ -25,14 +25,16 @@ with st.sidebar:
     uploaded_file = st.file_uploader("Choose a file")
 
 if uploaded_file is None:
-    st.info(" Upload a file through config")
+    st.info("Upload a file through config")
     st.stop()
 
-
-@st.cache_data
+@st.cache
 def load_data(path: str):
     df = pd.read_excel(path)
     return df
+
+if uploaded_file:
+    df = load_data(uploaded_file)
 
 
 df = load_data(uploaded_file)
